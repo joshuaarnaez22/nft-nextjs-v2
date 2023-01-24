@@ -1,11 +1,20 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
-
+import NextNProgress from "nextjs-progressbar";
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThirdwebProvider desiredChainId={ChainId.Goerli}>
-      <Component {...pageProps} />
-    </ThirdwebProvider>
+    <>
+      <NextNProgress
+        color="#29D"
+        startPosition={0.3}
+        stopDelayMs={200}
+        height={1}
+        showOnShallow={true}
+      />
+      <ThirdwebProvider desiredChainId={ChainId.Goerli}>
+        <Component {...pageProps} />
+      </ThirdwebProvider>
+    </>
   );
 }
