@@ -9,7 +9,7 @@ export default function App({ Component, pageProps }: AppProps) {
         color="#29D"
         startPosition={0.3}
         stopDelayMs={200}
-        height={1}
+        height={2}
         showOnShallow={true}
       />
       <ThirdwebProvider desiredChainId={ChainId.Goerli}>
