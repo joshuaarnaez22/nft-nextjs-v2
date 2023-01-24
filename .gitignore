@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-
+package-lock.json
 # testing
 /coverage
 
@@ -12,6 +12,8 @@
 /.next/
 /out/
 
+/sanity/node_modules
+/sanity/package-lock.json
 # production
 /build
 
