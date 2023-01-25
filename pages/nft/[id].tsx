@@ -23,7 +23,7 @@ const BoredApes = ({ collection }: Props) => {
   const disconnect = useDisconnect();
   const [totalSupply, setTotalSupply] = useState<BigNumber>();
   const [claimedSupply, setClaimedSupply] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [price, setPrice] = useState("");
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const BoredApes = ({ collection }: Props) => {
   const claimedNfts = async () => {
     const claimed = await contract?.getAllClaimed();
     const total = await contract?.totalSupply();
-    setTotalSupply(total);
+    setTotalSupply(total || 0);
     setClaimedSupply(claimed?.length || 0);
   };
 
@@ -133,7 +133,7 @@ const BoredApes = ({ collection }: Props) => {
             </p>
           ) : (
             <p className=" text-xl text-green-500 py-2">
-              {claimedSupply} / {totalSupply?.toString()} NFT&apos;s claimed
+              {claimedSupply} / {totalSupply?.toNumber()} NFT&apos;s claimed
             </p>
           )}
         </div>
