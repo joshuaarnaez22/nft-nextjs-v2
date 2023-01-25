@@ -60,7 +60,7 @@ const BoredApes = ({ collection }: Props) => {
   const claimedNfts = async () => {
     const claimed = await contract?.getAllClaimed();
     const total = await contract?.totalSupply();
-    setTotalSupply(total || 0);
+    setTotalSupply(total);
     setClaimedSupply(claimed?.length || 0);
   };
 
@@ -133,7 +133,8 @@ const BoredApes = ({ collection }: Props) => {
             </p>
           ) : (
             <p className=" text-xl text-green-500 py-2">
-              {claimedSupply} / {totalSupply?.toNumber()} NFT&apos;s claimed
+              {claimedSupply} / {totalSupply?.toString() || "0"} NFT&apos;s
+              claimed
             </p>
           )}
         </div>
