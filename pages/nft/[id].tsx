@@ -1,21 +1,68 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { sanityClient, urlForImage } from "../../sanity";
 import { Collection } from "../../types";
 
-import { useAddress, useMetamask, useDisconnect } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  useMetamask,
+  useDisconnect,
+  useContract,
+} from "@thirdweb-dev/react";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-
+import { BigNumber } from "ethers";
+import { FaEthereum } from "react-icons/fa";
 interface Props {
   collection: Collection;
 }
 const BoredApes = ({ collection }: Props) => {
-  console.log(collection);
-
+  const { contract } = useContract(collection.address, "nft-drop");
   const connectWithMetamask = useMetamask();
   const address = useAddress();
   const disconnect = useDisconnect();
+  const [totalSupply, setTotalSupply] = useState<BigNumber>();
+  const [claimedSupply, setClaimedSupply] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [price, setPrice] = useState("");
+
+  useEffect(() => {
+    if (!contract) return;
+    (async () => {
+      setLoading(true);
+      const nft = await contract.claimConditions.getAll();
+      setPrice(nft[0]?.currencyMetadata.displayValue);
+      claimedNfts();
+      setLoading(false);
+    })();
+  }, [contract]);
+
+  const mintNFT = async () => {
+    try {
+      if (!contract || !address) return;
+      setLoading(true);
+      const qty = 1;
+      const tx = await contract.claimTo(address, qty);
+      const receipt = tx[0].receipt;
+      const claimedTokenId = tx[0].id;
+      const claimedNFT = await tx[0].data();
+      console.log(receipt);
+      console.log(claimedTokenId);
+      console.log(claimedNFT);
+      claimedNfts();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  const claimedNfts = async () => {
+    const claimed = await contract?.getAllClaimed();
+    const total = await contract?.totalSupply();
+    setTotalSupply(total);
+    setClaimedSupply(claimed?.length || 0);
+  };
 
   return (
     <div className="flex h-screen flex-col lg:grid lg:grid-cols-10">
@@ -62,7 +109,7 @@ const BoredApes = ({ collection }: Props) => {
         </div>
         <hr className="border" />
         {address && (
-          <p className="font-bold text-center text-sm text-rose-400 pt-3">
+          <p className="animate-pulse font-bold text-center text-sm text-rose-400 pt-3">
             Your&apos;e logged in with wallet {address.substring(0, 5)}...
             {address.substring(address.length - 5)}
           </p>
@@ -80,15 +127,50 @@ const BoredApes = ({ collection }: Props) => {
             {" "}
             {collection.title}
           </h1>
-          <p className="pt-2 text-xl text-green-500">
-            13 / 21 NFT&apos;s claimed
-          </p>
+          {loading ? (
+            <p className="animate-bounce pt-2 text-xl text-green-500">
+              Loading Supply Count...
+            </p>
+          ) : (
+            <p className=" text-xl text-green-500 py-2">
+              {claimedSupply} / {totalSupply?.toString()} NFT&apos;s claimed
+            </p>
+          )}
         </div>
+        {loading && (
+          <div className="flex items-center justify-center">
+            <Image
+              src="/loading.gif"
+              alt={""}
+              width={0}
+              height={0}
+              quality={100}
+              className=" h-32 w-60 object-cover"
+            />
+          </div>
+        )}
 
         {/* // NOTE - FOOTER */}
         <div>
-          <button className="w-full h-16 bg-red-600 rounded-full text-white font-bold my-10 transition-all duration-700 ease-in-out hover:scale-x-105">
-            Mint NFT (0.01 ETH)
+          <button
+            onClick={mintNFT}
+            disabled={
+              loading || claimedSupply === totalSupply?.toNumber() || !address
+            }
+            className="w-full h-16 bg-red-600 rounded-full text-white font-bold mb-10 transition-all duration-700 ease-in-out hover:scale-x-105 disabled:bg-gray-400 disabled:transform-none"
+          >
+            {loading ? (
+              <>Loading...</>
+            ) : claimedSupply === totalSupply?.toNumber() ? (
+              <>Sold Out</>
+            ) : !address ? (
+              <>Sign in to Mint</>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <span className="font-bold">Mint NFT ({price} ETH)</span>
+                <FaEthereum />
+              </div>
+            )}
           </button>
         </div>
       </div>
