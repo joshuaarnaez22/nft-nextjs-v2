@@ -13,6 +13,7 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { BigNumber } from "ethers";
 import { FaEthereum } from "react-icons/fa";
+import { Toaster, toast } from "react-hot-toast";
 interface Props {
   collection: Collection;
 }
@@ -41,19 +42,53 @@ const BoredApes = ({ collection }: Props) => {
     try {
       if (!contract || !address) return;
       setLoading(true);
+      const toastLoading = toast.loading("Minting...", {
+        style: {
+          borderRadius: "10px",
+          background: "white",
+          color: "green",
+          fontWeight: "bolder",
+          padding: "20px",
+        },
+      });
       const qty = 1;
-      const tx = await contract.claimTo(address, qty);
-      const receipt = tx[0].receipt;
-      const claimedTokenId = tx[0].id;
-      const claimedNFT = await tx[0].data();
-      console.log(receipt);
-      console.log(claimedTokenId);
-      console.log(claimedNFT);
-      claimedNfts();
-      setLoading(false);
+      await contract
+        .claimTo(address, qty)
+        .then(async (tx) => {
+          const receipt = tx[0].receipt;
+          const claimedTokenId = tx[0].id;
+          const claimedNFT = await tx[0].data();
+          toast.success("Minted Successfully", {
+            duration: 3000,
+            style: {
+              borderRadius: "10px",
+              background: "green",
+              color: "white",
+              fontWeight: "bolder",
+              padding: "20px",
+            },
+          });
+          claimedNfts();
+        })
+        .catch(() =>
+          toast.error("Minting Failed", {
+            duration: 3000,
+            style: {
+              borderRadius: "10px",
+              background: "red",
+              color: "white",
+              fontWeight: "bolder",
+              padding: "10px",
+            },
+          })
+        )
+        .finally(() => {
+          toast.dismiss(toastLoading);
+          setLoading(false);
+        });
     } catch (error) {
-      setLoading(false);
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -66,8 +101,8 @@ const BoredApes = ({ collection }: Props) => {
 
   return (
     <div className="flex h-screen flex-col lg:grid lg:grid-cols-10">
+      <Toaster position="bottom-left" />
       {/* //NOTE - LEFT SIDE WITH APE IMAGE */}
-
       <div className="flex flex-col justify-center items-center bg-gradient-to-br from-cyan-500 to-rose-500 py-2 lg:min-h-screen lg:col-span-4">
         <div className="bg-gradient-to-br from-yellow-400 to-purple-600 p-2 rounded-xl">
           <Image
