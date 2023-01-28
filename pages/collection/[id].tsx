@@ -9,6 +9,7 @@ import { GetServerSideProps } from "next";
 import { sanityClient } from "../../sanity";
 
 const CollectionId = ({ result }: any) => {
+  console.log(result);
   const router = useRouter();
   const [allNfts, setAllNfts] = useState<any>();
   const [marketListing, setMarketListing] = useState<any>();
