@@ -21,23 +21,18 @@ const CollectionId = ({ result }: any) => {
     "marketplace"
   );
 
-  useEffect(() => {
+  useMemo(async () => {
     if (!nftContract) return;
-    (async () => {
-      const result = await nftContract.getAll();
-      console.log(result);
-      setAllNfts(result);
-    })();
+    const result = await nftContract.getAll();
+    console.log(result);
+    setAllNfts(result);
   }, [nftContract]);
 
-  useEffect(() => {
+  useMemo(async () => {
     if (!marketplaceContract) return;
-    (async () => {
-      const result = await marketplaceContract.getAllListings();
-      console.log(result);
-
-      setMarketListing(result);
-    })();
+    const result = await marketplaceContract.getAllListings();
+    console.log(result);
+    setMarketListing(result);
   }, [marketplaceContract]);
 
   return (
