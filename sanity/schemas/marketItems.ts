@@ -38,7 +38,7 @@ export default {
       name: 'owners',
       type: 'array',
       title: 'Owners',
-      of: [{type: 'reference', to: [{type: 'creator'}]}],
+      of: [{type: 'reference', to: [{type: 'owner'}]}],
     },
     {
       name: 'profileImage',

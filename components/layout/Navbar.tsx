@@ -11,7 +11,7 @@ import { useMetamask, useAddress, useDisconnect } from "@thirdweb-dev/react";
 import { Toaster, toast } from "react-hot-toast";
 const Navbar = () => {
   // NOTE static address
-  const collectionAddress = "0x35De079eb867399e2f290df52d1B2366e902C404";
+  const collectionAddress = "0x8d687ed506bBAE7F16B11E93716DAB9C7f1eC8Db";
   const address = useAddress();
   const connectWithMetamask = useMetamask();
   const disconnect = useDisconnect();
@@ -106,13 +106,7 @@ const Navbar = () => {
 
       {/* NOTE  header items basic screen*/}
       <div className="hidden lg:flex items-center justify-end space-x-7 mx-8  ">
-        <Link
-          href={{
-            pathname: `/collection`,
-            query: { collectionAddress },
-          }}
-          as="/collection"
-        >
+        <Link href={`/collection/${collectionAddress}`}>
           <div className="text-white text-lg cursor-pointer hover:opacity-80 font-semibold">
             Collections
           </div>
