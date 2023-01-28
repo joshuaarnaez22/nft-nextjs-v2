@@ -2,6 +2,10 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["links.papareact.com", "cdn.sanity.io"],
+    domains: [
+      "links.papareact.com",
+      "cdn.sanity.io",
+      "lh3.googleusercontent.com",
+    ],
   },
 };

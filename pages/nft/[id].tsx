@@ -13,11 +13,14 @@ import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { BigNumber } from "ethers";
 import { FaEthereum } from "react-icons/fa";
+import { BsArrowLeft } from "react-icons/bs";
 import { Toaster, toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 interface Props {
   collection: Collection;
 }
 const BoredApes = ({ collection }: Props) => {
+  const router = useRouter();
   const { contract } = useContract(collection.address, "nft-drop");
   const connectWithMetamask = useMetamask();
   const address = useAddress();
@@ -42,7 +45,7 @@ const BoredApes = ({ collection }: Props) => {
     try {
       if (!contract || !address) return;
       setLoading(true);
-      const toastLoading = toast.loading("Minting...", {
+      const toastLoading = toast.loading("Minting NFT...", {
         style: {
           borderRadius: "10px",
           background: "white",
@@ -101,6 +104,12 @@ const BoredApes = ({ collection }: Props) => {
 
   return (
     <div className="flex h-screen flex-col lg:grid lg:grid-cols-10">
+      <div
+        onClick={() => router.back()}
+        className="absolute mt-3 ml-3  cursor-pointer hover:animate-pulse hover:bg-gray-300 p-3 hover:rounded-full hover:opacity-30"
+      >
+        <BsArrowLeft size={30} className="opacity-40" />
+      </div>
       <Toaster position="bottom-left" />
       {/* //NOTE - LEFT SIDE WITH APE IMAGE */}
       <div className="flex flex-col justify-center items-center bg-gradient-to-br from-cyan-500 to-rose-500 py-2 lg:min-h-screen lg:col-span-4">
@@ -128,12 +137,12 @@ const BoredApes = ({ collection }: Props) => {
         <div className="flex justify-between items-center pt-10 pb-5 ">
           <h1 className="w-48 text-xl font-extralight cursor-pointer sm:w-80">
             The{" "}
-            <Link href="/">
+            <Link href="/nft-drop">
               <span className="font-extrabold underline decoration-pink-400/50">
                 Santa Claws
               </span>{" "}
             </Link>
-            NFT Market Place
+            NFT Drop
           </h1>
           <button
             onClick={() => (address ? disconnect() : connectWithMetamask())}
