@@ -13,6 +13,7 @@ const CollectionId = ({ result }: any) => {
   const [allNfts, setAllNfts] = useState<any>();
   const [marketListing, setMarketListing] = useState<any>();
   const { id } = router.query;
+  console.log(router);
 
   const { contract: nftContract } = useContract(id as string, "nft-collection");
   const { contract: marketplaceContract } = useContract(
@@ -20,19 +21,24 @@ const CollectionId = ({ result }: any) => {
     "marketplace"
   );
 
-  useMemo(async () => {
+  useEffect(() => {
     if (!nftContract) return;
-    const result = await nftContract.getAll();
-    console.log(result);
-    setAllNfts(result);
+    (async () => {
+      const result = await nftContract.getAll();
+      console.log(result);
+      setAllNfts(result);
+    })();
   }, [nftContract]);
 
-  useMemo(async () => {
+  useEffect(() => {
     if (!marketplaceContract) return;
-    const result = await marketplaceContract.getAllListings();
-    console.log(result);
-    setMarketListing(result);
-  }, [nftContract]);
+    (async () => {
+      const result = await marketplaceContract.getAllListings();
+      console.log(result);
+
+      setMarketListing(result);
+    })();
+  }, [marketplaceContract]);
 
   return (
     <div className="min-h-screen bg-gray-800">
