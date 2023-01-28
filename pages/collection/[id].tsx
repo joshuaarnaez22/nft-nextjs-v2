@@ -9,12 +9,10 @@ import { GetServerSideProps } from "next";
 import { sanityClient } from "../../sanity";
 
 const CollectionId = ({ result }: any) => {
-  console.log(result);
   const router = useRouter();
   const [allNfts, setAllNfts] = useState<any>();
   const [marketListing, setMarketListing] = useState<any>();
   const { id } = router.query;
-  console.log(router);
 
   const { contract: nftContract } = useContract(id as string, "nft-collection");
   const { contract: marketplaceContract } = useContract(
@@ -25,16 +23,17 @@ const CollectionId = ({ result }: any) => {
   useMemo(async () => {
     if (!nftContract) return;
     const result = await nftContract.getAll();
-    console.log(result);
     setAllNfts(result);
   }, [nftContract]);
 
   useMemo(async () => {
     if (!marketplaceContract) return;
     const result = await marketplaceContract.getAllListings();
-    console.log(result);
     setMarketListing(result);
   }, [marketplaceContract]);
+
+  console.log(allNfts);
+  console.log(marketListing);
 
   return (
     <div className="min-h-screen bg-gray-800">
