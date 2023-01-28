@@ -20,6 +20,7 @@ const Navbar = () => {
     if (!address) return localStorage.removeItem("address");
 
     const storageAdress = localStorage.getItem("address");
+
     if (storageAdress === address) return;
 
     (async () => {
