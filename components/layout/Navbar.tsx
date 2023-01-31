@@ -126,7 +126,7 @@ const Navbar = () => {
           onClick={() => (address ? disconnect() : connectWithMetamask())}
           size={32}
           className={`cursor-pointer hover:opacity-80 font-semibol ${
-            address ? "text-gray-500" : "text-white"
+            address ? "text-red-500" : "text-white"
           }`}
         />
         <MdAccountBalanceWallet
