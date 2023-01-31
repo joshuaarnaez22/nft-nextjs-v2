@@ -9,11 +9,12 @@ import { AiOutlineInstagram, AiOutlineTwitter } from "react-icons/ai";
 import { HiDotsVertical } from "react-icons/hi";
 import { FaEthereum } from "react-icons/fa";
 import NftCard from "@/components/nfts/NftCard";
+import { Waveform } from "@uiball/loaders";
 
 const CollectionId = ({ result, id }: any) => {
   const [allNfts, setAllNfts] = useState<any>();
   const [marketListing, setMarketListing] = useState<any>();
-
+  const [loading, setLoading] = useState(true);
   const { contract: nftContract } = useContract(id as string, "nft-collection");
   const { contract: marketplaceContract } = useContract(
     "0x35De079eb867399e2f290df52d1B2366e902C404",
@@ -25,6 +26,7 @@ const CollectionId = ({ result, id }: any) => {
     (async () => {
       const result = await nftContract.getAll();
       setAllNfts(result);
+      setLoading(false);
     })();
   }, [nftContract]);
 
@@ -33,6 +35,7 @@ const CollectionId = ({ result, id }: any) => {
     (async () => {
       const result = await marketplaceContract.getAllListings();
       setMarketListing(result);
+      setLoading(false);
     })();
   }, [marketplaceContract]);
 
@@ -131,13 +134,20 @@ const CollectionId = ({ result, id }: any) => {
         <div className="text-center mt-10 text-xl text-gray-500 font-semibold">
           {result.description}
         </div>
-        <div className="flex flex-wrap justify-center ">
-          {allNfts &&
-            allNfts.map((nft: any) => (
-              <div key={nft.metadata.id} className="m-5">
-                <NftCard {...{ marketListing, nft }} />
-              </div>
-            ))}
+
+        <div className="flex flex-wrap justify-center mt-10">
+          {loading ? (
+            <Waveform size={40} lineWeight={3.5} speed={1} color="white" />
+          ) : (
+            <>
+              {allNfts &&
+                allNfts.map((nft: any) => (
+                  <div key={nft.metadata.id} className="m-5">
+                    <NftCard {...{ marketListing, nft }} />
+                  </div>
+                ))}
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@
     "@sanity/image-url": "^1.0.2",
     "@thirdweb-dev/react": "^3.6.10",
     "@thirdweb-dev/sdk": "^3.6.10",
+    "@uiball/loaders": "^1.2.6",
     "ethers": "^5.7.2",
     "next": "latest",
     "next-sanity": "^4.1.1",
