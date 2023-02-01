@@ -91,16 +91,19 @@ const Navbar = () => {
       {/* NOTE  header items default screen*/}
       <div className="flex items-center justify-end space-x-7 lg:hidden">
         <CgProfile
+          onClick={() => (address ? disconnect() : connectWithMetamask())}
           size={32}
-          className="text-white cursor-pointer hover:opacity-80 "
+          className={`cursor-pointer hover:opacity-80 font-semibol ${
+            address ? "text-red-500" : "text-white"
+          }`}
+        />
+        <MdAccountBalanceWallet
+          size={32}
+          className="text-white cursor-pointer hover:opacity-80 font-semibold"
         />
         <AiOutlineShoppingCart
           size={32}
-          className="text-white cursor-pointer hover:opacity-80 "
-        />
-        <GiHamburgerMenu
-          size={32}
-          className="text-white cursor-pointer hover:opacity-80 "
+          className="text-white cursor-pointer hover:opacity-80 font-semibold"
         />
       </div>
 
