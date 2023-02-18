@@ -8,6 +8,7 @@ module.exports = {
       "lh3.googleusercontent.com",
       "via.placeholder.com",
       "gateway.ipfscdn.io",
+      "giphy.com",
     ],
   },
 };

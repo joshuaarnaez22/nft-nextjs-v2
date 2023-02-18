@@ -14,7 +14,6 @@ import { Waveform } from "@uiball/loaders";
 const CollectionId = ({ result, id }: any) => {
   const [allNfts, setAllNfts] = useState<any>();
   const [marketListing, setMarketListing] = useState<any>();
-  const [loading, setLoading] = useState(true);
   const { contract: nftContract } = useContract(id as string, "nft-collection");
   const { contract: marketplaceContract } = useContract(
     "0x35De079eb867399e2f290df52d1B2366e902C404",
@@ -25,8 +24,9 @@ const CollectionId = ({ result, id }: any) => {
     if (!nftContract) return;
     (async () => {
       const result = await nftContract.getAll();
+      console.log(result);
+
       setAllNfts(result);
-      setLoading(false);
     })();
   }, [nftContract]);
 
@@ -35,7 +35,6 @@ const CollectionId = ({ result, id }: any) => {
     (async () => {
       const result = await marketplaceContract.getAllListings();
       setMarketListing(result);
-      setLoading(false);
     })();
   }, [marketplaceContract]);
 
@@ -136,18 +135,14 @@ const CollectionId = ({ result, id }: any) => {
         </div>
 
         <div className="flex flex-wrap justify-center mt-10">
-          {loading ? (
-            <Waveform size={40} lineWeight={3.5} speed={1} color="white" />
-          ) : (
-            <>
-              {allNfts &&
-                allNfts.map((nft: any) => (
-                  <div key={nft.metadata.id} className="m-5">
-                    <NftCard {...{ marketListing, nft }} />
-                  </div>
-                ))}
-            </>
-          )}
+          <>
+            {allNfts &&
+              allNfts.map((nft: any) => (
+                <div key={nft.metadata.id} className="m-5">
+                  <NftCard {...{ marketListing, nft }} />
+                </div>
+              ))}
+          </>
         </div>
       </div>
     </div>
